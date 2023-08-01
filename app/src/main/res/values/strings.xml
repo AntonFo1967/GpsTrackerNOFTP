@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">GpsTracker</string>
     <string name="coordinate_dialog">Координаты GPS</string>
-    <string name="time_dialog">Время</string>
-    <string name="velocity_dialog">Скорость</string>
-    <string name="GPSStatus_dialog">GPS status</string>
-    <string name="start_button">Start</string>
+    <string name="time_dialog">Time</string>
+    <string name="velocity_dialog">Speed</string>
+    <string name="GPSStatus_dialog">Provider</string>
+    <string name="power_dialog">Bat status</string>
+    <string name="start_button">Start GPS</string>
     <string name="sent_button">Sent</string>
     <string name="IPAddress">172.30.34.70</string>
     <string name="IPAddressWHITE">94.228.243.168</string>

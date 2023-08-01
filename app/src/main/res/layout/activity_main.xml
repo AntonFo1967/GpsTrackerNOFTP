@@ -6,141 +6,169 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/sent_button"
+    <TextView
+        android:id="@+id/tvBattery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sent_button"
-        app:layout_constraintBottom_toTopOf="@+id/GPSDataHistoryList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.221" />
-
-    <Button
-        android:id="@+id/start_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_button"
-        app:layout_constraintBottom_toTopOf="@+id/GPSDataHistoryList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016" />
+        android:layout_marginTop="8dp"
+        android:text="@string/power_dialog"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/sentButton"
+        app:layout_constraintStart_toEndOf="@+id/tvLocationGPS"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvLocationGPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/coordinate_dialog"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.001" />
-
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time_dialog"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLocationGPS"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvVelocity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/velocity_dialog"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTime"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLocationGPS" />
 
     <TextView
         android:id="@+id/tvStatusGPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/GPSStatus_dialog"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvVelocity"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tvVelocity" />
 
-    <ListView
-        android:id="@+id/GPSDataHistoryList"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:background="#EFE0E0"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/time_dialog"
+        android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Port" />
+        app:layout_constraintTop_toBottomOf="@+id/tvStatusGPS" />
 
-    <ListView
-        android:id="@+id/MSGDataHistoryList"
-        android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:background="#B8BDD8"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/start_button"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/GPSDataHistoryList"
-        app:layout_constraintVertical_bias="0"
-        tools:ignore="VisualLintBounds" />
+        app:layout_constraintTop_toBottomOf="@+id/sentButton" />
 
-    <EditText
-        android:id="@+id/IPAddress"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="80dp"
-        android:ems="10"
-        android:inputType="phone"
-        android:text="@string/IPAddress"
-        app:layout_constraintStart_toStartOf="parent"
+    <Button
+        android:id="@+id/sentButton"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/sent_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/IPAddress"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:autofillHints=""
+        android:baselineAligned="false"
+        android:ems="10"
+        android:inputType="phone"
+        android:isScrollContainer="false"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:text="@string/IPAddress"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTime"
+        tools:ignore="LabelFor,MissingConstraints,VisualLintOverlap,TextSizeCheck"
+        tools:visibility="visible" />
+
+    <EditText
         android:id="@+id/Port"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="140dp"
+        android:layout_width="95dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="phone"
         android:text="@string/Port"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/IPAddress"
+        tools:ignore="LabelFor,VisualLintOverlap" />
+
+    <CheckBox
+        android:id="@+id/checkBoxUDP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="bottom"
+        android:paddingBottom="8dp"
+        android:text="UDP"
+        app:layout_constraintEnd_toStartOf="@+id/startButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/checkBoxbroadcast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/Broadcast"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/GPSDataHistoryList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.025"
         app:layout_constraintStart_toEndOf="@+id/IPAddress"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.308" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxUDP" />
+
+    <ListView
+        android:id="@+id/GPSDataHistoryList"
+        android:layout_width="0dp"
+        android:layout_height="556dp"
+        android:layout_marginTop="8dp"
+        android:background="#EFE0E0"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Port"
+        tools:ignore="VisualLintBounds">
+
+    </ListView>
+
+    <ListView
+        android:id="@+id/MSGDataHistoryList"
+        android:layout_width="wrap_content"
+        android:layout_height="219dp"
+        android:layout_marginTop="8dp"
+        android:background="#B8BDD8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GPSDataHistoryList"
+        tools:ignore="VisualLintBounds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

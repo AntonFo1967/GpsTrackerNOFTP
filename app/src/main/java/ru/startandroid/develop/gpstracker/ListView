@@ -1,9 +1,10 @@
 package ru.startandroid.develop.gpstracker;
 
+
+
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -12,7 +13,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import android.content.SharedPreferences.Editor;
 
 public class MainActivity extends AppCompatActivity implements LocListenerInterface, View.OnClickListener {
-    private TextView tvCoordinate, tvTime, tvVelocity, tvStatusGPS, tvBattery;
+    private TextView tvCoordinate, tvTime, tvVelocity, tvStatusGPS;
     private LocationManager locationManager;
     private MyLocListener myLocListener;
 
@@ -56,15 +56,17 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     private SharedPreferences savePreferences;
 
-    //    private final String constIPAddress = "94.228.243.168";
-    private final String constIPAddress = "172.30.34.70";
+//    private final String constIPAddress = "94.228.243.168";
+    private String constIPAddress = "172.30.34.70";
     private final String constIPBroadcast = "255.255.255.255";
     private final Integer constPort = 40001;
-    private SensorManager sensorManager;
-    private Sensor sensorAccel;
-    private Sensor sensorLinAccel;
-    private Sensor sensorGravity;
 
+
+    SensorManager sensorManager;
+    Sensor sensorAccel;
+    Sensor sensorLinAccel;
+    Sensor sensorGravity;
+    StringBuilder sb = new StringBuilder();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,10 +84,10 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         MSGDataHistory.setAdapter(msgAdapter);
 
 
-        start_Button = findViewById(R.id.startButton);
+        start_Button = findViewById(R.id.start_button);
         start_Button.setOnClickListener(this);
 
-        sent_Button = findViewById(R.id.sentButton);
+        sent_Button = findViewById(R.id.sent_button);
         sent_Button.setOnClickListener(this);
 
         ipString = findViewById(R.id.IPAddress);
@@ -96,13 +98,13 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
         isUDP = findViewById(R.id.checkBoxUDP);
 
-        tvCoordinate = findViewById(R.id.tvLocationGPS);
-        tvTime = findViewById(R.id.tvTime);
-        tvVelocity = findViewById(R.id.tvVelocity);
-        tvStatusGPS = findViewById(R.id.tvStatusGPS);
-        tvBattery = findViewById(R.id.tvBattery);
+        init();
 
-        initSensors();
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorLinAccel = sensorManager
+                .getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        sensorGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
     }
 
@@ -116,6 +118,19 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                 SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(listener, sensorGravity,
                 SensorManager.SENSOR_DELAY_NORMAL);
+        //loadPreferencesFromFile();
+        //if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        //        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        }
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, readGPSDelay, 0, myLocListener);
 
     }
 
@@ -144,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         ed.apply();
     }
 
-    private void loadPreferencesFromFile() {
+    private void loadPreferencesFromFile(){
         savePreferences = getPreferences(MODE_PRIVATE);
 
         String savedText = savePreferences.getString("SAVED_IP", "");
@@ -155,34 +170,45 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
 
     }
 
-    private void initSensors() {
-        updateMSG("Init sensors");
+    private void init() {
+        updateMSG("Init");
+
+        tvCoordinate = findViewById(R.id.tvLocationGPS);
+        tvTime = findViewById(R.id.tvTime);
+        tvVelocity = findViewById(R.id.tvVelocity);
+        tvStatusGPS = findViewById(R.id.tvStatusGPS);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         myLocListener = new MyLocListener();
         myLocListener.setLocListenerInterface(this);
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorLinAccel = sensorManager
-                .getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        sensorGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-
-        tvBattery.setText(getString(R.string.power_dialog)+": " + getBatteryLevel());
+        loadPreferencesFromFile();
 
 
+        //checkPermissions();
 
-//        loadPreferencesFromFile();
 
     }
 
 
+    @SuppressLint("DefaultLocale")
     String format(float[] values) {
-        return String.format("%1$.1f\t%2$.1f\t%3$.1f", values[0], values[1],
+        return String.format("%1$.1f\t\t%2$.1f\t\t%3$.1f", values[0], values[1],
                 values[2]);
     }
 
+    void showInfo() {
+        sb.setLength(0);
+        sb.append("Accelerometer: ");
+        sb.append(format(valuesAccel));
+        sb.append("\n\nAccel motion: ");
+        sb.append(format(valuesAccelMotion));
+        sb.append("\nAccel gravity : ");
+        sb.append(format(valuesAccelGravity));
+        sb.append("\n\nLin accel : ");
+        sb.append(format(valuesLinAccel));
+        sb.append("\nGravity : ");
+        sb.append(format(valuesGravity));
+    }
 
     float[] valuesAccel = new float[3];
     float[] valuesAccelMotion = new float[3];
@@ -205,13 +231,20 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                         valuesAccelGravity[i] = (float) (0.1 * event.values[i] + 0.9 * valuesAccelGravity[i]);
                         valuesAccelMotion[i] = event.values[i]
                                 - valuesAccelGravity[i];
+                        showInfo();
                     }
                     break;
                 case Sensor.TYPE_LINEAR_ACCELERATION:
-                    System.arraycopy(event.values, 0, valuesLinAccel, 0, 3);
+                    for (int i = 0; i < 3; i++) {
+                        valuesLinAccel[i] = event.values[i];
+                        showInfo();
+                    }
                     break;
                 case Sensor.TYPE_GRAVITY:
-                    System.arraycopy(event.values, 0, valuesGravity, 0, 3);
+                    for (int i = 0; i < 3; i++) {
+                        valuesGravity[i] = event.values[i];
+                        showInfo();
+                    }
                     break;
             }
 
@@ -220,22 +253,25 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
     };
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.startButton:
+            case R.id.start_button:
                 startGPSTracking();
                 break;
-            case R.id.sentButton:
+            case R.id.sent_button:
                 sent_ONE_pack();
             case R.id.checkBoxbroadcast:
-                if (isBroadCast.isChecked()) {
+                    if (isBroadCast.isChecked()){
 
-                    savePreferencesToFile();
-                    ipString.setText(constIPBroadcast);
-                    break;
-                } else
-                    loadPreferencesFromFile();
+                        savePreferencesToFile();
+                        ipString.setText(constIPBroadcast);
+                        break;
+                    }
+
+                    else
+                        loadPreferencesFromFile();
 
                 break;
             default:
@@ -243,13 +279,18 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         }
     }
 
-    void startGPSTracking() {
-        if (isLocEnable) {
+    void startGPSTracking()
+    {
+        if (isLocEnable)
+        {
             locationManager.removeUpdates(myLocListener);
             isLocEnable = false;
             start_Button.setText("START GPS");
             updateMSG("STOP pressed");
-        } else {
+        }
+
+        else
+        {
             checkPermissions();
             isLocEnable = true;
             start_Button.setText("STOP GPS");
@@ -258,65 +299,58 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         }
     }
 
-    void sent_ONE_pack() {
-        String msg = "Test string from Anton";
+    void sent_ONE_pack(){
+        String msg = "*/1/1/0/55/0/0-0/#";
+        updateMSG("Sent pressed");
         new Thread(() -> {
 
-            try {
+            try
+
+            {
                 DatagramSocket udpSocket = new DatagramSocket(constPort);
                 byte[] buf = msg.getBytes();
                 DatagramPacket packet = new DatagramPacket(buf, buf.length, InetAddress.getByName(constIPAddress), constPort);
                 udpSocket.send(packet);
                 udpSocket.close();
-            } catch (SocketException e) {
+            }
+
+            catch(SocketException e)
+            {
                 updateMSG("Socket Error:" + e);
-            } catch (IOException e) {
+            }
+
+            catch(IOException e)
+            {
                 updateMSG("IO Error:" + e);
             }
         }).start();
     }
 
-    private void updateList(String gpsData) {
+    private void updateList(String gpsData)
+    {
         gpsDataHistory.add(0, gpsData);
         gpsAdapter.notifyDataSetChanged();
 
     }
 
 
-    private void updateMSG(String msgData) {
-        msgDataHistory.add(0, msgData);
+    private void updateMSG(String msgData)
+    {
+        msgDataHistory.add(0,msgData);
         msgAdapter.notifyDataSetChanged();
     }
 
-    private String createDataString(Location loc) {
-        return (String.format("#" + i + " Time : %1$td %1$tb %1$tY %1$ta %tT" + "| lat = %2$.4f" + "| lon = %3$.4f" + " | Speed= %4$.1f" + System.lineSeparator(),
+    private String createDataString(Location loc)
+    {
+        return (String.format("#"+i+" Time : %1$td %1$tb %1$tY %1$ta %tT"+ "| lat = %2$.4f"+ "| lon = %3$.4f"+" | Speed= %4$.1f"+System.lineSeparator(),
                 loc.getTime(),
                 loc.getLatitude(),
                 loc.getLongitude(),
-                loc.getSpeed() * 3.6));
+                loc.getSpeed()*3.6));
 
     }
 
-    private String createDataStringSensors() {
-        return (String.format("@" + i +
-                " |Ac: " + format(valuesAccel) +
-                " |AM: " + format(valuesAccelMotion) +
-                " |AG: " + format(valuesAccelGravity) +
-                " |LA: " + format(valuesLinAccel) +
-                " |Gr: " + format(valuesGravity)
-                + System.lineSeparator()));
-
-    }
-
-    public String getBatteryLevel() {
-        Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-
-        return ((float) level / (float) scale) * 100.0f + "%";
-    }
-
+    @SuppressLint({"DefaultLocale", "SetTextI18n", "SuspiciousIndentation"})
     private void updateDistance(Location loc)
     {
         updateMSG("Updating");
@@ -325,17 +359,18 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
                 loc.getLatitude(), loc.getLongitude()));
 
 
-        tvTime.setText(String.format(getString(R.string.time_dialog) + " : %1$td %1$tb %1$tY %1$ta %tT", loc.getTime()));
-        tvVelocity.setText(getString(R.string.velocity_dialog) + " = " +loc.getSpeed()*3.6);
-        tvStatusGPS.setText(getString(R.string.GPSStatus_dialog) + " = " +loc.getProvider());
-        tvBattery.setText(getString(R.string.power_dialog)+": " + getBatteryLevel());
+        tvTime.setText(String.format("Time : %1$td %1$tb %1$tY %1$ta %tT", loc.getTime()));
+
+
+        tvVelocity.setText("Speed = "+loc.getSpeed()*3.6);
+        tvStatusGPS.setText("Provider = "+loc.getProvider());
 
         updateList(createDataString(loc));
-        updateList(createDataStringSensors());
-
+        showInfo();
+        gpsDataHistory.add(0, String.valueOf(sb));
         if (isUDP.isChecked()) {
             UDPUpdate(createDataString(loc));
-            UDPUpdate(createDataStringSensors());
+            UDPUpdate(String.valueOf(sb));
         }
         i++;
     }
@@ -367,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements LocListenerInterf
         else
         {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, readGPSDelay,0,myLocListener);
+            //Toast.makeText(this, "Try update", Toast.LENGTH_SHORT).show();
             updateMSG("Try to update");
 
         }
